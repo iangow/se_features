@@ -9,12 +9,14 @@ from pandas.io.json import json_normalize
 conn_string = 'postgresql://' + os.environ['PGHOST'] + '/' + os.environ['PGDATABASE']
 engine = create_engine(conn_string)
 
-rv = engine.execute("SELECT category FROM se_features.word_list")
+target_schema = "se_features"
+engine.execute("SET search_path TO se_features, public")
+rv = engine.execute("SELECT category FROM word_list")
 categories = [ (r["category"]) for r in rv]
 
 plan = """
     SELECT word_list
-    FROM se_features.word_list
+    FROM word_list
     WHERE category = %s"""
 
 mod_word_list = {}
