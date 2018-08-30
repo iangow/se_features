@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import unicodedata, re, json
+import re, json
 from nltk.tokenize import wordpunct_tokenize
 import pandas as pd
 
