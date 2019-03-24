@@ -26,14 +26,14 @@ rs <- dbWriteTable(pg, "word_list_raw", df, overwrite=TRUE, row.names=FALSE)
 # Create a new table in PostgreSQL where words are aggregated into an
 # array of words for each category.
 rs <- dbGetQuery(pg, "
-    DROP TABLE IF EXISTS bs_linguistics.word_list;
+    DROP TABLE IF EXISTS se_features.word_list;
 
-    CREATE TABLE bs_linguistics.word_list AS
+    CREATE TABLE se_features.word_list AS
     SELECT category, array_agg(word) AS word_list
     FROM word_list_raw
     GROUP BY category;
 
-    ALTER TABLE bs_linguistics.word_list OWNER TO bs_linguistics;
+    ALTER TABLE se_features.word_list OWNER TO se_features;
 
     DROP TABLE IF EXISTS word_list_raw;")
 
@@ -41,7 +41,7 @@ db_comment <- paste0("CREATED USING liwc_etc/",
                      "liwc_create_word_list.R and data in ",
                     "https://docs.google.com/spreadsheets/d/", key, " ON ",
                     Sys.time())
-dbGetQuery(pg, paste0("COMMENT ON TABLE bs_linguistics.word_list IS '",
+dbGetQuery(pg, paste0("COMMENT ON TABLE se_features.word_list IS '",
                       db_comment, "'"))
 
 rs <- dbDisconnect(pg)

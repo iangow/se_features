@@ -56,7 +56,7 @@ def getFileNames(output_table, output_schema, num_files = None):
 
     return files
 
-output_schema = "bs_linguistics"
+output_schema = "se_features"
 output_table  = "liwc"
 
 # Get a list of files to work on.
@@ -81,7 +81,7 @@ res = pool.map(add_liwc, files_input)
 engine = create_engine(conn_string)
 conn = engine.connect()
 db_comment = "CREATED USING get_liwc_data.py from " + \
-              "GitHub azakolyukina/bs_linguistics ON " + \
+              "GitHub iangow/se_features ON " + \
               time.asctime(time.gmtime()) + ' UTC'
 
 conn.execute("COMMENT ON TABLE %s.%s IS '%s'" % (output_schema, output_table, db_comment))
