@@ -7,7 +7,7 @@ import os
 from sqlalchemy import create_engine
 import time
 
-output_schema = "bs_linguistics"
+output_schema = "streetevents"
 output_table  = "word_counts"
 
 conn_string = 'postgresql://' + os.environ['PGHOST'] + '/' + \
