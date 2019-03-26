@@ -119,7 +119,7 @@ res = pool.map(add_word_counts, files_input)
 engine = create_engine(conn_string)
 conn = engine.connect()
 db_comment = "CREATED USING liwc_etc/word_count_run.py from " + \
-              "GitHub azakolyukina/bs_linguistics ON " + \
+              "GitHub iangow/streetevents ON " + \
               time.asctime(time.gmtime()) + ' UTC'
 
 conn.execute("COMMENT ON TABLE %s.%s IS '%s'" % (output_schema, output_table, db_comment))
