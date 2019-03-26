@@ -7,7 +7,7 @@ import os
 from sqlalchemy import create_engine
 import time
 
-output_schema = "streetevents"
+output_schema = "se_features"
 output_table  = "word_counts"
 
 conn_string = 'postgresql://' + os.environ['PGHOST'] + '/' + \
@@ -119,7 +119,7 @@ res = pool.map(add_word_counts, files_input)
 engine = create_engine(conn_string)
 conn = engine.connect()
 db_comment = "CREATED USING liwc_etc/word_count_run.py from " + \
-              "GitHub iangow/streetevents ON " + \
+              "GitHub iangow/se_features ON " + \
               time.asctime(time.gmtime()) + ' UTC'
 
 conn.execute("COMMENT ON TABLE %s.%s IS '%s'" % (output_schema, output_table, db_comment))
