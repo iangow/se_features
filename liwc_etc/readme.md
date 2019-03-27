@@ -4,7 +4,7 @@
 
 | Data                 | Main Code           |Supplementary Codes                | Output table          | Primary key |
 | :-------------       |:-------------:      |:-------------:             | :-----                | :------
-| LIWC          | `liwc_run.py`       |  `liwc_add.py`, `liwc_functions.py` | `se_features.liwc_tmp`    | `(file_name, last_update, section, context, speaker_number)`|
+| LIWC          | `liwc_run.py`       |  `liwc_add.py`, `liwc_functions.py` | `se_features.liwc`    | `(file_name, last_update, section, context, speaker_number)`|
 | Word counts   | `word_count_run.py` | `word_count_add.py`, `word_count_functions.py` | `se_features.word_counts` | `(file_name, last_update, section, context, speaker_name)` |
 
 Note that the code is designed to run in an incremental fashion. 
