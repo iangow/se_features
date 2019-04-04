@@ -7,7 +7,7 @@ target_schema <- "se_features"
 key <- "17GGtdEyQI1ioAwlnjHBMV4rgANY7IQkiN_peC2i3llw"
 gs <- gs_key(key)
 
-wordlist <- gs_read(gs, ws = "liwc_words")
+wordlist <- gs_read(gs, ws = "liwc_words", col_types=paste(rep("c", 46), collapse=""))
 names(wordlist) <- tolower(names(wordlist))
 
 # Convert from "wide" to "long" format (in long format, columns
