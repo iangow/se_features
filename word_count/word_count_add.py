@@ -32,7 +32,7 @@ def add_word_counts(args):
         """ % (file_name, last_update)
 
         speaker_data = pd.read_sql(sql, engine)
-        speaker_data['last_update'] = speaker_data['last_update'].astype(pd.Timestamp)
+        speaker_data['last_update'] = speaker_data['last_update']
         speaker_data['sum'] = speaker_data['speaker_text'].apply(word_count)
         speaker_data['sent_count'] = speaker_data['speaker_text'].apply(sent_count)
         speaker_data['sum_6'] = speaker_data['speaker_text'].apply(word_count, args = (6,))
@@ -45,7 +45,7 @@ def add_word_counts(args):
             d = {'file_name': [file_name], 'last_update': [last_update],
                  'speaker_name': '', 'context': 'pres', 'section':1 }
             speaker_data = pd.DataFrame(d)
-            speaker_data['last_update'] = speaker_data['last_update'].astype(pd.Timestamp)
+            speaker_data['last_update'] = speaker_data['last_update']
 
         conn = engine.connect()
         speaker_data.to_sql(output_table, conn, schema=output_schema, if_exists='append',

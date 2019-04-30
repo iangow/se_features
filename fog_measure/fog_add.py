@@ -3,7 +3,7 @@
 import pandas as pd
 import os
 from sqlalchemy import create_engine
-from fog_functions import fog_measure
+from fog_functions import fog
 from sqlalchemy.types import DateTime
 
 conn_string = 'postgresql://' + os.environ['PGHOST'] + '/' + os.environ['PGDATABASE']
@@ -32,8 +32,8 @@ def add_word_counts(args):
         """ % (file_name, last_update)
 
         speaker_data = pd.read_sql(sql, engine)
-        speaker_data['last_update'] = speaker_data['last_update'].astype(pd.Timestamp)
-        speaker_data['fog'] = speaker_data['speaker_text'].apply(fog_measure)
+        speaker_data['last_update'] = speaker_data['last_update']
+        speaker_data['fog'] = speaker_data['speaker_text'].apply(fog)
         speaker_data = speaker_data.drop(['speaker_text'], axis=1)
 
          # If no speaker_data returned, we still create a DataFrame to keep track
@@ -42,7 +42,7 @@ def add_word_counts(args):
             d = {'file_name': [file_name], 'last_update': [last_update],
                  'speaker_name': '', 'context': 'pres', 'section':1 }
             speaker_data = pd.DataFrame(d)
-            speaker_data['last_update'] = speaker_data['last_update'].astype(pd.Timestamp)
+            speaker_data['last_update'] = speaker_data['last_update']
 
         conn = engine.connect()
         speaker_data.to_sql(output_table, conn, schema=output_schema, if_exists='append',
