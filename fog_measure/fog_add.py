@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+import sys
+sys.path.insert(0, '../word_count/')
+
 import pandas as pd
 import os
 from sqlalchemy import create_engine
 from fog_functions import fog
 from sqlalchemy.types import DateTime
+from word_count_functions import word_count, number_count, sent_count
 
 conn_string = 'postgresql://' + os.environ['PGHOST'] + '/' + os.environ['PGDATABASE']
 
@@ -33,6 +37,10 @@ def add_word_counts(args):
 
         speaker_data = pd.read_sql(sql, engine)
         speaker_data['last_update'] = speaker_data['last_update']
+        speaker_data['sum'] = speaker_data['speaker_text'].apply(word_count)
+        speaker_data['sent_count'] = speaker_data['speaker_text'].apply(sent_count)
+        speaker_data['sum_6'] = speaker_data['speaker_text'].apply(word_count, args = (6,))
+        speaker_data['sum_num'] = speaker_data['speaker_text'].apply(number_count)
         speaker_data['fog'] = speaker_data['speaker_text'].apply(fog)
         speaker_data = speaker_data.drop(['speaker_text'], axis=1)
 

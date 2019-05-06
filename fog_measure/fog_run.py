@@ -9,7 +9,7 @@ from sqlalchemy import create_engine
 import time
 
 output_schema = "se_features"
-output_table  = "fog"
+output_table  = "fog_measure"
 
 conn_string = 'postgresql://' + os.environ['PGHOST'] + '/' + \
                 os.environ['PGDATABASE']
@@ -62,6 +62,10 @@ def getFileNames(output_table, output_schema,
                     context text NOT NULL,
                     section integer NOT NULL,
                     count integer,
+                    sum integer,
+                    sent_count integer,
+                    sum_6 integer,
+                    sum_num integer,
                     fog float,
                     PRIMARY KEY (file_name, last_update, speaker_name, speaker_number, context, section)
                 );
@@ -101,9 +105,6 @@ def getFileNames(output_table, output_schema,
 files = getFileNames(output_table, output_schema)
 print("n_files: %d" % len(files))
 
-# Only run for 1 file so it's easier to test.
-print(files[0:14])
-files = files[0:14]
 
 num_threads = 14
 pool = Pool(num_threads)
