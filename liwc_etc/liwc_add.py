@@ -28,7 +28,7 @@ def add_liwc(args):
             """ % (file_name, last_update)
 
         speaker_data = pd.read_sql(sql, engine)
-        speaker_data['last_update'] = speaker_data['last_update'].astype(pd.Timestamp)
+        speaker_data['last_update'] = speaker_data['last_update']
 
         # Calculate LIWC, then drop speaker text
         speaker_data['liwc_counts'] = speaker_data['speaker_text'].apply(liwc_counts)
@@ -39,7 +39,7 @@ def add_liwc(args):
         if len(speaker_data)==0:
             d = {'file_name': [file_name], 'last_update': [last_update]}
             speaker_liwc = pd.DataFrame(d)
-            speaker_liwc['last_update'] = speaker_liwc['last_update'].astype(pd.Timestamp)
+            speaker_liwc['last_update'] = speaker_liwc['last_update']
         else:
             # Expand single JSON field to multiple columns
             speaker_liwc = expand_json(speaker_data, 'liwc_counts')
