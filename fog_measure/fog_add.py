@@ -27,12 +27,12 @@ def add_word_counts(args):
         last_update = file_w_date['last_update']
 
         sql =  """
-        SELECT file_name, last_update, speaker_name, speaker_number, context, section,
+        SELECT file_name, last_update, speaker_number, context, section,
             count(speaker_text) AS count,
             string_agg(speaker_text, ' ') AS speaker_text
         FROM streetevents.speaker_data
         WHERE file_name = '%s' AND last_update = '%s' AND speaker_name IS NOT NULL
-        GROUP BY file_name, last_update, speaker_name, speaker_number, context, section
+        GROUP BY file_name, last_update, speaker_number, context, section
         """ % (file_name, last_update)
 
         speaker_data = pd.read_sql(sql, engine)
@@ -48,7 +48,7 @@ def add_word_counts(args):
         # of files that have been processed.
         if len(speaker_data)==0:
             d = {'file_name': [file_name], 'last_update': [last_update],
-                 'speaker_name': '', 'speaker_number': '0', 'context': 'pres', 'section':1 }
+                 'speaker_number': '0', 'context': 'pres', 'section':1 }
             speaker_data = pd.DataFrame(d)
             speaker_data['last_update'] = speaker_data['last_update']
 

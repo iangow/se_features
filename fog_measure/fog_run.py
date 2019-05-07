@@ -57,7 +57,6 @@ def getFileNames(output_table, output_schema,
                 (
                     file_name text NOT NULL,
                     last_update timestamp with time zone NOT NULL,
-                    speaker_name text NOT NULL,
                     speaker_number integer,
                     context text NOT NULL,
                     section integer NOT NULL,
@@ -67,7 +66,7 @@ def getFileNames(output_table, output_schema,
                     sum_6 integer,
                     sum_num integer,
                     fog float,
-                    PRIMARY KEY (file_name, last_update, speaker_name, speaker_number, context, section)
+                    PRIMARY KEY (file_name, last_update, speaker_number, context, section)
                 );
 
                ALTER TABLE %s.%s OWNER TO %s;
