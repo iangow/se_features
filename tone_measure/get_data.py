@@ -9,26 +9,37 @@ Created on Tue May  7 20:13:01 2019
 import pandas as pd
 import requests
 import io
+import numpy as np
 
 base_url = "http://www3.nd.edu/~mcdonald/Data/Finance_Word_Lists"
 
-url  = ["LoughranMcDonald_Positive.csv",
+url  = ("LoughranMcDonald_Positive.csv",
                    "LoughranMcDonald_Negative.csv",
                    "LoughranMcDonald_Uncertainty.csv",
                    "LoughranMcDonald_Litigious.csv",
                    "LoughranMcDonald_ModalStrong.csv",
-                   "LoughranMcDonald_ModalWeak.csv"]
+                   "LoughranMcDonald_ModalWeak.csv")
 
-category = ["positive", "negative", "uncertainty",
-            "litigious", "modal_strong", "modal_weak"]
+category = ("positive", "negative", "uncertainty",
+            "litigious", "modal_strong", "modal_weak")
 
-r = requests.post(base_url+'/'+url[0])
+words = []
 
-print(r)
+for i in range(len(category)):
+    print(category[i])
+
+    r = requests.post(base_url+'/'+url[i])
+
+    if r.ok:
+        data = r.content.decode('utf8')
+        words.append(pd.Series.tolist((pd.read_csv(io.StringIO(data))).T))
+
+url_f = [base_url + s  for s in url]
+
+df = pd.DataFrame({'category': category, 'url': url_f, 
+                   'words': words})
 
 
-if r.ok:
-    data = r.content.decode('utf8')
-    df = pd.read_csv(io.StringIO(data))
+df['words'] = df['words'].str[0]
 
-df.to_csv("lm_words_pythonb.csv")
+df.to_csv("lm_words_python.csv")
