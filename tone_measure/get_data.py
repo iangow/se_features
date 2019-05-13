@@ -32,14 +32,20 @@ for i in range(len(category)):
 
     if r.ok:
         data = r.content.decode('utf8')
-        words.append(pd.Series.tolist((pd.read_csv(io.StringIO(data))).T))
+        words.append(pd.Series.tolist((pd.read_csv(io.StringIO(data), squeeze=True)).T))
+
+    print(tuple(words))
 
 url_f = [base_url + s  for s in url]
 
-df = pd.DataFrame({'category': category, 'url': url_f, 
-                   'words': words})
+#words = words.astype(str)
 
 
-df['words'] = df['words'].str[0]
+df = pd.DataFrame({'url': url_f, 
+                   'words': words}, index=category)
 
-df.to_csv("lm_words_python.csv")
+
+df["words"] = df["words"].apply(", ".join) #Delete brackets from the list
+df = df.rename_axis('category')
+
+df.to_csv("lm_words.csv")
