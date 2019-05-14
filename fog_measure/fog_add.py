@@ -35,14 +35,14 @@ def add_word_counts(args):
         """ % (file_name, last_update)
 
         speaker_data = pd.read_sql(sql, engine)
-        speaker_data['last_update'] = speaker_data['last_update'].apply(lambda d: pd.to_datetime(str(d)))
+        speaker_data['last_update'] = speaker_data['last_update'].map(lambda x: str(x.astimezone('UTC')))
         speaker_data['fog_data'] = speaker_data['speaker_text'].apply(fog)
         speaker_data = speaker_data.drop(['speaker_text'], axis=1)
         
         # If no speaker_data returned, we still create a DataFrame to keep track
         # of files that have been processed.
         if len(speaker_data)==0:
-            d = {'file_name': [file_name], 'last_update': [last_update],
+            d = {'file_name': [file_name], 'last_update': [str(last_update)],
                  'speaker_number': '0', 'context': 'pres', 'section':1 }
             speaker_data = pd.DataFrame(d)
 
@@ -53,7 +53,7 @@ def add_word_counts(args):
         conn = engine.connect()
         speaker_data.to_sql(output_table, conn, schema=output_schema, if_exists='append',
                             index=False,
-                            dtype = {'last_update': DateTime(timezone = True)})
+                            dtype = {'last_update': DateTime(timezone=True)})
         conn.close()
 
     engine.dispose()
