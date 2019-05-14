@@ -1,16 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-import sys
-sys.path.insert(0, '../word_count/')
-
 import pandas as pd
 import os
+import json
 from sqlalchemy import create_engine
 from fog_functions import fog
 from sqlalchemy.types import DateTime
-from word_count_functions import word_count, number_count, sent_count
 
 conn_string = 'postgresql://' + os.environ['PGHOST'] + '/' + os.environ['PGDATABASE']
+
+def expand_json(df, col):
+    return pd.concat([df.drop([col], axis=1),
+                      df[col].map(lambda x: json.loads(json.dumps(x))).apply(pd.Series)], axis=1)
 
 def add_word_counts(args):
 
@@ -28,29 +29,26 @@ def add_word_counts(args):
 
         sql =  """
         SELECT file_name, last_update, speaker_number, context, section,
-            count(speaker_text) AS count,
-            string_agg(speaker_text, ' ') AS speaker_text
+           speaker_text
         FROM streetevents.speaker_data
-        WHERE file_name = '%s' AND last_update = '%s' AND speaker_name IS NOT NULL
-        GROUP BY file_name, last_update, speaker_number, context, section
+        WHERE file_name = '%s' AND last_update = '%s'
         """ % (file_name, last_update)
 
         speaker_data = pd.read_sql(sql, engine)
-        speaker_data['last_update'] = speaker_data['last_update']
-        speaker_data['sum'] = speaker_data['speaker_text'].apply(word_count)
-        speaker_data['sent_count'] = speaker_data['speaker_text'].apply(sent_count)
-        speaker_data['sum_6'] = speaker_data['speaker_text'].apply(word_count, args = (6,))
-        speaker_data['sum_num'] = speaker_data['speaker_text'].apply(number_count)
-        speaker_data['fog'] = speaker_data['speaker_text'].apply(fog)
+        speaker_data['last_update'] = speaker_data['last_update'].apply(lambda d: pd.to_datetime(str(d)))
+        speaker_data['fog_data'] = speaker_data['speaker_text'].apply(fog)
         speaker_data = speaker_data.drop(['speaker_text'], axis=1)
-
-         # If no speaker_data returned, we still create a DataFrame to keep track
+        
+        # If no speaker_data returned, we still create a DataFrame to keep track
         # of files that have been processed.
         if len(speaker_data)==0:
             d = {'file_name': [file_name], 'last_update': [last_update],
                  'speaker_number': '0', 'context': 'pres', 'section':1 }
             speaker_data = pd.DataFrame(d)
-            speaker_data['last_update'] = speaker_data['last_update']
+
+        else:
+            # Expand single JSON field to multiple columns
+            speaker_data = expand_json(speaker_data, 'fog_data')
 
         conn = engine.connect()
         speaker_data.to_sql(output_table, conn, schema=output_schema, if_exists='append',
@@ -59,4 +57,3 @@ def add_word_counts(args):
         conn.close()
 
     engine.dispose()
-

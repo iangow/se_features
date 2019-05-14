@@ -60,12 +60,10 @@ def getFileNames(output_table, output_schema,
                     speaker_number integer,
                     context text NOT NULL,
                     section integer NOT NULL,
-                    count integer,
-                    sum integer,
-                    sent_count integer,
-                    sum_6 integer,
-                    sum_num integer,
                     fog float,
+                    complex_words float,
+                    fog_words float,
+                    fog_sents float,
                     PRIMARY KEY (file_name, last_update, speaker_number, context, section)
                 );
 

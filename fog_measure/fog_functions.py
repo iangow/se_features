@@ -2,6 +2,7 @@ import re, nltk, sys
 import string
 from nltk.corpus import cmudict
 
+
 dic = cmudict.dict()
 
 def nsyl(word):
@@ -19,7 +20,8 @@ def fog(the_text):
 
     # Require words to be more than three characters. Otherwise, "edu"="E-D-U" => 3 syllables
     complex_words = [word for word in words if nsyl(word)>=3 and len(word)>3]
-    if len(words)>0 and len(sents)>0:
+    if len(words) > 0 and len(sents) > 0:
         fog = 0.4 * (100.0*len(complex_words)/len(words) + 1.0*len(words)/len(sents))
-        return(fog)
-
+        the_dict = {'fog':fog, 'complex_words': len(complex_words), 'fog_words': len(words),
+                    'fog_sents': len(sents)}
+        return the_dict
