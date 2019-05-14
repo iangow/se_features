@@ -55,6 +55,7 @@ matched_features_raw <-
 
 matched_features <-
     matched_features_raw %>%
+    select(-speaker_number) %>%
     group_by(file_name, last_update, answer_nums) %>%
     summarize_all(sum, na.rm = TRUE) %>%
 #    select(-fog) %>%
