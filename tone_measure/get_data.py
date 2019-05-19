@@ -26,20 +26,12 @@ category = ("positive", "negative", "uncertainty",
 words = []
 
 for i in range(len(category)):
-    print(category[i])
-
     r = requests.post(base_url+'/'+url[i])
-
     if r.ok:
         data = r.content.decode('utf8')
         words.append(pd.Series.tolist((pd.read_csv(io.StringIO(data), squeeze=True)).T))
 
-    print(tuple(words))
-
 url_f = [base_url + s  for s in url]
-
-#words = words.astype(str)
-
 
 df = pd.DataFrame({'url': url_f, 
                    'words': words}, index=category)
