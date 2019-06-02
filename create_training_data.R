@@ -10,9 +10,9 @@ liwc <- tbl(pg, "liwc")
 word_counts <- tbl(pg, "word_counts")
 tone_measure <- tbl(pg, "tone_measure")
 
-non_answers_tagged <- tbl(pg, sql("SELECT * FROM non_answer.non_answers_tagged"))
-regexes <- tbl(pg, sql("SELECT * FROM non_answer.regexes"))
-gold_standard <- tbl(pg, sql("SELECT * FROM non_answer.gold_standard"))
+non_answers_tagged <- tbl(pg, "non_answers_tagged")
+regexes <- tbl(pg, "regexes")
+gold_standard <- tbl(pg, "gold_standard")
 
 regex_matches <-
     non_answers_tagged %>%
@@ -80,9 +80,17 @@ all_data <-
 training_data <-
     all_data %>%
     filter(obs_type == "train") %>%
-    select(-obs_type, -last_update)
+    select(-obs_type, -last_update) %>%
+    copy_to(pg, ., name = "training_data", overwrite=TRUE, temporary = FALSE)
+
+rs <- dbExecute(pg, "ALTER TABLE training_data ADD PRIMARY KEY (file_name)")
+
+db_comment <- paste0("CREATED USING create_training_data.R from ",
+                     "GitHub iangow/se_features ON ", Sys.time())
+rs <- dbExecute(pg, paste0("COMMENT ON TABLE training_data IS '",
+                           db_comment, "';"))
+
+rs <- dbExecute(pg, "ALTER TABLE training_data OWNER TO non_answer")
+rs <- dbExecute(pg, "GRANT SELECT ON training_data TO non_answer_access")
 
 rs <- dbDisconnect(pg)
-
-objs <- ls()
-rm(list = c(objs[objs != "training_data"], "objs"))
