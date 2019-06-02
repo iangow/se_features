@@ -8,6 +8,7 @@ rs <- dbExecute(pg, "SET search_path TO non_answer, se_features")
 fog <- tbl(pg, "fog_measure")
 liwc <- tbl(pg, "liwc")
 word_counts <- tbl(pg, "word_counts")
+tone_measure <- tbl(pg, "tone_measure")
 
 non_answers_tagged <- tbl(pg, sql("SELECT * FROM non_answer.non_answers_tagged"))
 regexes <- tbl(pg, sql("SELECT * FROM non_answer.regexes"))
@@ -40,13 +41,20 @@ fog_mod <-
     filter(section == 1L, context == "qa") %>%
     select(-context, -section)
 
+tone_measure_mod <-
+    tone_measure %>%
+    filter(section == 1L, context == "qa") %>%
+    select(-context, -section)
+
 all_features <-
     liwc_mod %>%
     inner_join(word_counts_mod,
-               by = c("file_name", "last_update", "speaker_number"))# %>%
-    #inner_join(fog_mod,
-    #           by = c("file_name", "last_update", "speaker_number"))
-
+               by = c("file_name", "last_update", "speaker_number")) %>%
+    inner_join(fog_mod,
+               by = c("file_name", "last_update", "speaker_number")) %>%
+    inner_join(tone_measure_mod,
+               by = c("file_name", "last_update", "speaker_number"))
+    
 matched_features_raw <-
     gold_standard %>%
     select(file_name, answer_nums) %>%
@@ -58,7 +66,6 @@ matched_features <-
     select(-speaker_number) %>%
     group_by(file_name, last_update, answer_nums) %>%
     summarize_all(sum, na.rm = TRUE) %>%
-#    select(-fog) %>%
     compute()
 
 all_data <-
