@@ -6,4 +6,4 @@ cd ../liwc_etc
 cd ../tone_measure
 ./tone_measure_run.py
 cd ../word_count
-./word_count_add.py
+./word_count_run.py
