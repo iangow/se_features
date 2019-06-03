@@ -38,7 +38,6 @@ def getFileNames(output_table, output_schema,
             new_files AS (
             	SELECT file_name, max(last_update) AS last_update
             	FROM streetevents.calls
-                WHERE event_type = 1
                 GROUP BY file_name),
 
             unprocessed_files AS (

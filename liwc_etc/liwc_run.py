@@ -31,7 +31,6 @@ def getFileNames(output_table, output_schema, num_files = None):
             latest_call AS (
                 SELECT file_name, max(last_update) AS last_update
                 FROM streetevents.calls AS a
-                WHERE event_type = 1
                 GROUP BY file_name
                 EXCEPT
                 SELECT file_name, last_update FROM %s.%s)
@@ -44,7 +43,6 @@ def getFileNames(output_table, output_schema, num_files = None):
             latest_call AS (
                 SELECT file_name, max(last_update) AS last_update
                 FROM streetevents.calls AS a
-                WHERE event_type = 1
                 GROUP BY file_name)
             SELECT DISTINCT * FROM latest_call
             %s
