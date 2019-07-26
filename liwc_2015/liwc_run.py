@@ -55,7 +55,7 @@ def getFileNames(output_table, output_schema, num_files = None):
     return files
 
 output_schema = "se_features"
-output_table  = "liwc"
+output_table  = "liwc_2015"
 
 # Get a list of files to work on.
 files = getFileNames(output_table, output_schema)
