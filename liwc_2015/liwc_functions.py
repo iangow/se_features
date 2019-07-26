@@ -12,13 +12,13 @@ engine = create_engine(conn_string)
 target_schema = "se_features"
 
 engine.execute("SET search_path TO %s, public" % target_schema)
-rv = engine.execute("SELECT category FROM %s.word_list" % target_schema)
+rv = engine.execute("SELECT category FROM %s.liwc_2015" % target_schema)
 
-categories = [ (r["category"]) for r in rv]
+categories = [ r['category'] for r in rv]
 
 plan = """
     SELECT word_list
-    FROM %s.word_list """ % target_schema + "WHERE category = %s"
+    FROM %s.liwc_2015 """ % target_schema + "WHERE category = %s"
 
 mod_word_list = {}
 for cat in categories:
