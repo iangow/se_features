@@ -30,7 +30,7 @@ for cat in categories:
 # Pre-compile regular expressions.
 regex_list = {}
 for key in mod_word_list.keys():
-    regex = '\\b(?:' + '|'.join(mod_word_list[key]) + ')\\b'
+    regex = r"\b(?:" + '|'.join(mod_word_list[key]) + r")[\b']"
     regex_list[key] = re.compile(regex)
 
 def liwc_counts(the_text):
