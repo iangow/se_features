@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 -- In R, system("psql -f admin.sql") runs this
 CREATE SCHEMA se_features;
 CREATE ROLE se_features;
