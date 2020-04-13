@@ -22,7 +22,7 @@ def getFileNames(ner_table, ner_schema, num_files=None):
         sql = """
             WITH latest_call AS (
                 SELECT file_name, max(last_update) as last_update
-                FROM streetevents.qa_pairs
+                FROM streetevents.calls
                 GROUP BY file_name)
             SELECT file_name, last_update
             FROM latest_call
@@ -34,7 +34,7 @@ def getFileNames(ner_table, ner_schema, num_files=None):
     else:
         sql = """
             SELECT file_name, max(last_update) as last_update
-            FROM streetevents.qa_pairs
+            FROM streetevents.calls
             GROUP BY file_name
             %s
         """ % (limit_clause)
@@ -66,7 +66,7 @@ if __name__ == "__main__":
 
     from processFileNER import processFileNER, processFileNER_star
 
-    ner_schema = 'bs_linguistics'
+    ner_schema = 'se_features'
     ner_table = 'ner_class_alt_' + str(ner_class)
 
     # Get a list of files to work on.
