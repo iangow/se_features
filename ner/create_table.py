@@ -10,7 +10,7 @@ table_ner_class_7="ner_class_alt_7"
 
 
 def create_ner_class_table(engine,the_schema,the_table):
-
+    
     sql = """
             CREATE TABLE %s.%s
             (
@@ -32,10 +32,8 @@ def create_ner_class_table(engine,the_schema,the_table):
                 the_schema, the_table,
                 the_schema, the_table,
                 the_schema,the_table,the_schema,
-                the_schema, the_table,
-                the_schema,
-                the_schema, the_table,str(date.today()),
-                the_schema, the_table)
+                the_schema, the_table, the_schema,
+                the_schema, the_table,str(date.today()))
     engine.execute(sql)
 
 def check_and_create_tables():
