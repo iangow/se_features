@@ -4,7 +4,7 @@ from run_NER import conn_string
 from datetime import date
 
 
-the_schema="bs_linguistics"
+the_schema="se_features"
 table_ner_class_4="ner_class_alt_4"
 table_ner_class_7="ner_class_alt_7"
 
@@ -27,7 +27,7 @@ def create_ner_class_table(engine,the_schema,the_table):
             ALTER TABLE %s.%s OWNER TO %s;
             GRANT ALL ON %s.%s TO %s;
 
-            comment on table %s.%s is 'CREATED USING azakolyukina/bs_linguistics/proper_nouns/create_table.py ON %s';
+            comment on table %s.%s is 'CREATED USING iangow/se_features/ner/create_table.py ON %s';
         """ % (the_schema, the_table,
                 the_schema, the_table,
                 the_schema, the_table,
