@@ -8,8 +8,10 @@ def processFileNER(file_name, ner_class, ner_table, ner_schema):
     # Get file NER
     print("getQuestionData", file_name, ner_table, ner_schema)
     df = getQuestionData(file_name, ner_table, ner_schema)
+    
     print("after get questions data", df.columns)
     tagger_init(ner_class)
+    
     df['ner_tags'] = findner_array(df['speaker_text'])
     print("after findner_array", df)
     df = df.drop(['speaker_text'], 1)
@@ -17,16 +19,14 @@ def processFileNER(file_name, ner_class, ner_table, ner_schema):
     # Submit dataframe to database
     engine = create_engine(conn_string)
     
-    # To be changed: Yvonne deleted the below line
+    # Yvonne deleted the below line
     # engine.execute("DELETE FROM %s.%s WHERE file_name ='%s'" % (ner_schema, ner_table, file_name))
     
     #df['last_update'] =  df['last_update'].apply(lambda d: to_datetime(str(d)))
     #df['last_update'] =  df['last_update'].astype(pd.Timestamp)
     
-    df['last_update'] = df['last_update'].map(lambda x: str(x.astimezone('UTC')))
-    
-    #if pd.isna(df['speaker_number']):
-     #   print("ERROR:", df)
+    # df['last_update'] = df['last_update'].map(lambda x: str(x.astimezone('UTC')))
+    df['last_update'] = pd.to_datetime(df['last_update'], utc = True)
         
     df.to_sql(ner_table, engine, schema=ner_schema, if_exists='append',
               dtype = {'last_update': DateTime(timezone = True)},index=False)
