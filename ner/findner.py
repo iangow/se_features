@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 import json
@@ -105,10 +105,10 @@ def tagger_init(ner_class=7):
 if __name__ == "__main__":
     tagger_init()
 
-    res = findner("This is a sample passage. " +
-                  "Анастасия is a professor at the University of Chicago.")
-    print(res)
+    # res = findner("This is a sample passage. " +
+    #              "Анастасия is a professor at the University of Chicago.")
+    # print(res)
 
-    res = findner("This is a sample passage. " +
-                   "Ian Gow is a professor at Harvard Business School.")
-    print(res)
+    # res = findner("This is a sample passage. " +
+    #               "Ian Gow is a professor at Harvard Business School.")
+    # print(res)
