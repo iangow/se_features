@@ -12,7 +12,7 @@ global tagger
 
 # Point these toward your download of Stanford NER
 # Need to figure out which is appropriate classifier to use
-stanford_path = 'stanford-ner-2018-02-27'
+stanford_path = 'stanford-ner-2018-10-16'
 NER_JAR = os.path.join(stanford_path, 'stanford-ner.jar')
 
 def get_positions(sentence_lists):
