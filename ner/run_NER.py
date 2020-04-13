@@ -1,13 +1,17 @@
 import os
 
+os.environ["PGHOST"] = "10.101.13.99"
+os.environ["PGDATABASE"] = "crsp"
+
 conn_string = 'postgresql://' + os.environ['PGHOST'] + '/' + os.environ['PGDATABASE']
-
-
 
 def getFileNames(ner_table, ner_schema, num_files=None):
     import pandas as pd
-    #from pandas import to_datetime
+    from pandas import to_datetime
+    #from pandas import to_pydatetime
+    # from pandas import to_pydatetime
     from sqlalchemy import create_engine
+    
     engine = create_engine(conn_string)
 
     # Using LIMIT is much faster than getting all files and ditching unneeded ones.
@@ -22,7 +26,7 @@ def getFileNames(ner_table, ner_schema, num_files=None):
         sql = """
             WITH latest_call AS (
                 SELECT file_name, max(last_update) as last_update
-                FROM streetevents.calls
+                FROM streetevents.speaker_data
                 GROUP BY file_name)
             SELECT file_name, last_update
             FROM latest_call
@@ -34,14 +38,21 @@ def getFileNames(ner_table, ner_schema, num_files=None):
     else:
         sql = """
             SELECT file_name, max(last_update) as last_update
-            FROM streetevents.calls
+            FROM streetevents.speaker_data
             GROUP BY file_name
             %s
         """ % (limit_clause)
 
     files = pd.read_sql(sql, engine)
-    #files['last_update'] =  files['last_update'].apply(lambda d: to_datetime(str(d)))
-    files['last_update'] =  files['last_update'].astype(pd.Timestamp)
+    print("files got:", len(files))
+    
+    # To be checked: Can I use `utc = True` here?
+    #files['last_update'] =  files['last_update'].apply(lambda d: to_datetime(str(d), utc = True))
+    #files['last_update'] =  files['last_update'].astype(pd.Timestamp)
+    #files['last_update'] =  files['last_update'].map(lambda x: str(x.astimezone('UTC')))
+    
+    files['last_update'] = pd.to_datetime(files['last_update'], utc = True)
+    # files['last_update'] = files['last_update'].astype(pd.Timestamp)
     files.to_sql(ner_table, engine, schema=ner_schema, if_exists='append', index=False)
     engine.dispose()
 
@@ -52,6 +63,7 @@ if __name__ == "__main__":
     from itertools import repeat
     import argparse
     from create_table import check_and_create_tables
+    from sqlalchemy.types import DateTime
 
     #checks to see if ner_class_alt_4 and ner_class_alt_7 tables exist and create if they do not.
     check_and_create_tables()
