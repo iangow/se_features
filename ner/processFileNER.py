@@ -17,7 +17,8 @@ def processFileNER(file_name, ner_class, ner_table, ner_schema):
     # Submit dataframe to database
     engine = create_engine(conn_string)
     
-    engine.execute("DELETE FROM %s.%s WHERE file_name ='%s'" % (ner_schema, ner_table, file_name))
+    # To be changed: Yvonne deleted the below line
+    # engine.execute("DELETE FROM %s.%s WHERE file_name ='%s'" % (ner_schema, ner_table, file_name))
     
     #df['last_update'] =  df['last_update'].apply(lambda d: to_datetime(str(d)))
     #df['last_update'] =  df['last_update'].astype(pd.Timestamp)
