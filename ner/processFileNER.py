@@ -6,17 +6,27 @@ def processFileNER(file_name, ner_class, ner_table, ner_schema):
     import pandas as pd
     from sqlalchemy import DateTime
     # Get file NER
+    print("getQuestionData", file_name, ner_table, ner_schema)
     df = getQuestionData(file_name, ner_table, ner_schema)
+    print("after get questions data", df.columns)
     tagger_init(ner_class)
     df['ner_tags'] = findner_array(df['speaker_text'])
+    print("after findner_array", df)
     df = df.drop(['speaker_text'], 1)
 
     # Submit dataframe to database
     engine = create_engine(conn_string)
-    engine.execute("DELETE FROM %s.%s WHERE file_name ='%s'" %
-                        (ner_schema, ner_table, file_name))
+    
+    engine.execute("DELETE FROM %s.%s WHERE file_name ='%s'" % (ner_schema, ner_table, file_name))
+    
     #df['last_update'] =  df['last_update'].apply(lambda d: to_datetime(str(d)))
-    df['last_update'] =  df['last_update'].astype(pd.Timestamp)
+    #df['last_update'] =  df['last_update'].astype(pd.Timestamp)
+    
+    df['last_update'] = df['last_update'].map(lambda x: str(x.astimezone('UTC')))
+    
+    #if pd.isna(df['speaker_number']):
+     #   print("ERROR:", df)
+        
     df.to_sql(ner_table, engine, schema=ner_schema, if_exists='append',
               dtype = {'last_update': DateTime(timezone = True)},index=False)
     engine.dispose()
@@ -27,7 +37,7 @@ def processFileNER_star(args_izip):
 
 def getQuestionData(file_name, ner_table, ner_schema):
     from pandas.io.sql import read_sql
-
+    print("file_name", file_name)
     engine = create_engine(conn_string)
 
     
@@ -40,7 +50,8 @@ def getQuestionData(file_name, ner_table, ner_schema):
         FROM streetevents.speaker_data
         WHERE file_name='%s'
     """ % (file_name)
-
+    
+    
     df = read_sql(sql, engine)
     engine.dispose()
     return df
