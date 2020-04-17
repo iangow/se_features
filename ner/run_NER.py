@@ -7,10 +7,9 @@ conn_string = 'postgresql://' + os.environ['PGHOST'] + '/' + os.environ['PGDATAB
 
 def getFileNames(ner_table, ner_schema, num_files=None):
     import pandas as pd
-    from pandas import to_datetime
-    #from pandas import to_pydatetime
-    # from pandas import to_pydatetime
+    from pandas import Timestamp
     from sqlalchemy import create_engine
+    from sqlalchemy.types import DateTime
     
     engine = create_engine(conn_string)
 
@@ -51,9 +50,12 @@ def getFileNames(ner_table, ner_schema, num_files=None):
     #files['last_update'] =  files['last_update'].astype(pd.Timestamp)
     #files['last_update'] =  files['last_update'].map(lambda x: str(x.astimezone('UTC')))
     
-    files['last_update'] = pd.to_datetime(files['last_update'], utc = True)
+    files['last_update'] =files['last_update'].map(lambda x: Timestamp(x))
     # files['last_update'] = files['last_update'].astype(pd.Timestamp)
-    files.to_sql(ner_table, engine, schema=ner_schema, if_exists='append', index=False)
+    
+    files.to_sql(ner_table, engine, schema=ner_schema, if_exists='append',
+              dtype = {'last_update': DateTime(timezone = True)},index=False)
+
     engine.dispose()
 
     return files

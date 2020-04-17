@@ -4,7 +4,9 @@ from sqlalchemy import create_engine
 
 def processFileNER(file_name, ner_class, ner_table, ner_schema):
     import pandas as pd
-    from sqlalchemy import DateTime
+    from pandas import Timestamp
+    from sqlalchemy.types import DateTime
+    
     # Get file NER
     print("getQuestionData", file_name, ner_table, ner_schema)
     df = getQuestionData(file_name, ner_table, ner_schema)
@@ -26,7 +28,7 @@ def processFileNER(file_name, ner_class, ner_table, ner_schema):
     #df['last_update'] =  df['last_update'].astype(pd.Timestamp)
     
     # df['last_update'] = df['last_update'].map(lambda x: str(x.astimezone('UTC')))
-    df['last_update'] = pd.to_datetime(df['last_update'], utc = True)
+    df['last_update'] =  df['last_update'].map(lambda x: Timestamp(x))
         
     df.to_sql(ner_table, engine, schema=ner_schema, if_exists='append',
               dtype = {'last_update': DateTime(timezone = True)},index=False)
