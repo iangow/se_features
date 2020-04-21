@@ -45,13 +45,7 @@ def getFileNames(ner_table, ner_schema, num_files=None):
     files = pd.read_sql(sql, engine)
     print("files got:", len(files))
     
-    # To be checked: Can I use `utc = True` here?
-    #files['last_update'] =  files['last_update'].apply(lambda d: to_datetime(str(d), utc = True))
-    #files['last_update'] =  files['last_update'].astype(pd.Timestamp)
-    #files['last_update'] =  files['last_update'].map(lambda x: str(x.astimezone('UTC')))
-    
     files['last_update'] =files['last_update'].map(lambda x: Timestamp(x))
-    # files['last_update'] = files['last_update'].astype(pd.Timestamp)
     
     files.to_sql(ner_table, engine, schema=ner_schema, if_exists='append',
               dtype = {'last_update': DateTime(timezone = True)},index=False)
