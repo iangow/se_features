@@ -8,26 +8,19 @@ def processFileNER(file_name, ner_class, ner_table, ner_schema):
     from sqlalchemy.types import DateTime
     
     # Get file NER
-    print("getQuestionData", file_name, ner_table, ner_schema)
     df = getQuestionData(file_name, ner_table, ner_schema)
     
-    print("after get questions data", df.columns)
     tagger_init(ner_class)
     
     df['ner_tags'] = findner_array(df['speaker_text'])
-    print("after findner_array", df)
     df = df.drop(['speaker_text'], 1)
 
     # Submit dataframe to database
     engine = create_engine(conn_string)
     
-    # Yvonne deleted the below line
+    # This line seems unnecessary as we performed the same step in "getQuestionData" (line 40)
     # engine.execute("DELETE FROM %s.%s WHERE file_name ='%s'" % (ner_schema, ner_table, file_name))
-    
-    #df['last_update'] =  df['last_update'].apply(lambda d: to_datetime(str(d)))
-    #df['last_update'] =  df['last_update'].astype(pd.Timestamp)
-    
-    # df['last_update'] = df['last_update'].map(lambda x: str(x.astimezone('UTC')))
+
     df['last_update'] =  df['last_update'].map(lambda x: Timestamp(x))
         
     df.to_sql(ner_table, engine, schema=ner_schema, if_exists='append',
