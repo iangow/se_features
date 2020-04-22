@@ -32,7 +32,7 @@ def create_ner_class_table(engine,the_schema,the_table):
                 the_schema, the_table,
                 the_schema, the_table,
                 the_schema,the_table,the_schema,
-                the_schema, the_table, the_schema,
+                the_schema, the_table, the_schema + "_access",
                 the_schema, the_table,str(date.today()))
     engine.execute(sql)
 
