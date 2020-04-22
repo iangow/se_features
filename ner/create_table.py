@@ -25,7 +25,7 @@ def create_ner_class_table(engine,the_schema,the_table):
             CREATE INDEX ON %s.%s (file_name,last_update, speaker_number,section,context);
 
             ALTER TABLE %s.%s OWNER TO %s;
-            GRANT ALL ON %s.%s TO %s;
+            GRANT SELECT ON %s.%s TO %s;
 
             comment on table %s.%s is 'CREATED USING iangow/se_features/ner/create_table.py ON %s';
         """ % (the_schema, the_table,
