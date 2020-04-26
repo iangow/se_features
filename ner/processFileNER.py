@@ -33,7 +33,7 @@ def processFileNER_star(args_izip):
 
 def getQuestionData(file_name, ner_table, ner_schema):
     from pandas.io.sql import read_sql
-    print("file_name", file_name)
+    
     engine = create_engine(conn_string)
 
     
