@@ -4,7 +4,7 @@ import pandas as pd
 import os
 import json
 from sqlalchemy import create_engine
-from fog_functions import fog
+from ling_features import fog
 from sqlalchemy.types import DateTime
 
 conn_string = 'postgresql://' + os.environ['PGHOST'] + '/' + os.environ['PGDATABASE']
