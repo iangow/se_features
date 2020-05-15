@@ -3,7 +3,7 @@
 import pandas as pd
 import os
 from sqlalchemy import create_engine
-from word_count_functions import word_count, number_count, sent_count
+from ling_features import word_count, number_count, sent_count
 from sqlalchemy.types import DateTime
 
 conn_string = 'postgresql://' + os.environ['PGHOST'] + '/' + os.environ['PGDATABASE']
