@@ -5,7 +5,7 @@ import os
 import json
 from sqlalchemy import create_engine
 from sqlalchemy.types import DateTime
-from topic_functions import kls_domains_ind
+from ling_features import kls_domains_ind
 
 conn_string = 'postgresql://' + os.environ['PGHOST'] + '/' + os.environ['PGDATABASE']
 
