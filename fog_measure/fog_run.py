@@ -87,7 +87,6 @@ def getFileNames(output_table, output_schema,
         sql = """
         	SELECT DISTINCT file_name, max(last_update) AS last_update
         	FROM streetevents.calls AS a
-        	WHERE event_type=1
         	GROUP BY file_name
             %s
         """ % (limit_clause)
