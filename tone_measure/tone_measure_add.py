@@ -4,7 +4,7 @@ import pandas as pd
 import os
 import json
 from sqlalchemy import create_engine
-from tone_measure_functions import tone_count
+from ling_features import tone_count
 from sqlalchemy.types import DateTime
 
 conn_string = 'postgresql://' + os.environ['PGHOST'] + '/' + os.environ['PGDATABASE']
