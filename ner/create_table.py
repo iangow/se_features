@@ -19,10 +19,12 @@ def create_ner_class_table(engine,the_schema,the_table):
             speaker_number int,
             section int,
             context text,
-            ner_tags jsonb);
+            ner_tags jsonb
+            PRIMARY KEY (file_name, last_update, speaker_number, context, section)
+            );
 
-            CREATE INDEX ON %s.%s (file_name,last_update, speaker_number);
-            CREATE INDEX ON %s.%s (file_name,last_update, speaker_number,section,context);
+            CREATE INDEX ON %s.%s (file_name);
+            CREATE INDEX ON %s.%s (file_name, last_update);
 
             ALTER TABLE %s.%s OWNER TO %s;
             GRANT SELECT ON %s.%s TO %s;
