@@ -3,7 +3,7 @@ import os
 import time
 from sqlalchemy import create_engine
 
-from liwc_functions import liwc_counts, expand_json
+from liwc_functions import add_liwc_counters, expand_json
 from sqlalchemy.types import DateTime
 
 conn_string = 'postgresql://' + os.environ['PGHOST'] + '/' + os.environ['PGDATABASE']
@@ -31,7 +31,7 @@ def add_liwc(args):
         speaker_data['last_update'] = speaker_data['last_update']
 
         # Calculate LIWC, then drop speaker text
-        speaker_data['liwc_counts'] = speaker_data['speaker_text'].apply(liwc_counts)
+        speaker_data['add_liwc_counters'] = speaker_data['speaker_text'].apply(add_liwc_counters)
         speaker_data = speaker_data.drop(['speaker_text'], axis=1)
 
         # If no speaker_data returned, we still create a DataFrame to keep track
@@ -42,7 +42,7 @@ def add_liwc(args):
             speaker_liwc['last_update'] = speaker_liwc['last_update']
         else:
             # Expand single JSON field to multiple columns
-            speaker_liwc = expand_json(speaker_data, 'liwc_counts')
+            speaker_liwc = expand_json(speaker_data, 'add_liwc_counters')
 
         # Export LIWC data from the call to Postgres
         conn = engine.connect()
