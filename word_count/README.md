@@ -29,11 +29,11 @@ You need to download some packages from NLTK.
 ```python
 >>> import nltk
 >>> nltk.download('cmudict')
-[nltk_data] Downloading package cmudict to /home/igow/nltk_data...
+[nltk_data] Downloading package cmudict to /home/user/nltk_data...
 [nltk_data]   Unzipping corpora/cmudict.zip.
 True
 >>> nltk.download('punkt')
-[nltk_data] Downloading package punkt to /home/igow/nltk_data...
+[nltk_data] Downloading package punkt to /home/user/nltk_data...
 [nltk_data]   Unzipping tokenizers/punkt.zip.
 True
 >>> 
