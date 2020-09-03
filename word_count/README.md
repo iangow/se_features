@@ -23,3 +23,18 @@ By default, results will be saved in `se_features.word_counts`
 
 (Specify `output_schema` and `output_table` in  `word_count_run.py` to change the output table. 
 Specify `num_files` in `word_count_run.py` to run the code for a limited number of files for testing purposes.)
+
+You need to download some packages from NLTK.
+
+```python
+>>> import nltk
+>>> nltk.download('cmudict')
+[nltk_data] Downloading package cmudict to /home/igow/nltk_data...
+[nltk_data]   Unzipping corpora/cmudict.zip.
+True
+>>> nltk.download('punkt')
+[nltk_data] Downloading package punkt to /home/igow/nltk_data...
+[nltk_data]   Unzipping tokenizers/punkt.zip.
+True
+>>> 
+```
