@@ -2,14 +2,14 @@
 # -*- coding: utf-8 -*-
 
 from multiprocessing import Pool
-from fog_add import add_word_counts
 import pandas as pd
 import os
 from sqlalchemy import create_engine
 import time
+from fls_add import add_word_counts
 
 output_schema = "se_features"
-output_table  = "fog_measure"
+output_table  = "fls_measure"
 
 conn_string = 'postgresql://' + os.environ['PGHOST'] + '/' + \
                 os.environ['PGDATABASE']
@@ -36,14 +36,14 @@ def getFileNames(output_table, output_schema,
             WITH
 
             new_files AS (
-            	SELECT file_name, max(last_update) AS last_update
-            	FROM streetevents.calls
+                SELECT file_name, max(last_update) AS last_update
+                FROM streetevents.calls
                 GROUP BY file_name),
 
             unprocessed_files AS (
-            	SELECT file_name, last_update FROM new_files
-            	EXCEPT
-            	SELECT file_name, last_update FROM %s.%s)
+                SELECT file_name, last_update FROM new_files
+                EXCEPT
+                SELECT file_name, last_update FROM %s.%s)
 
             SELECT DISTINCT * FROM unprocessed_files
             %s
@@ -59,12 +59,28 @@ def getFileNames(output_table, output_schema,
                     speaker_number integer,
                     context text NOT NULL,
                     section integer NOT NULL,
-                    fog float,
-                    complex_words float,
-                    fog_words float,
-                    fog_sents float,
+                    fl_fog float,
+                    fl_complex_words float,
+                    fl_fog_words float,
+                    fl_fog_sents float,
+                    nfl_fog float,
+                    nfl_complex_words float,
+                    nfl_fog_words float,
+                    nfl_fog_sents float,
+                    fl_positive float,
+                    fl_negative float,
+                    fl_uncertainty float,
+                    fl_litigious float,
+                    fl_modal_strong float,
+                    fl_modal_weak float,
+                    nfl_positive float,
+                    nfl_negative float,
+                    nfl_uncertainty float,
+                    nfl_litigious float,
+                    nfl_modal_strong float,
+                    nfl_modal_weak float,
                     PRIMARY KEY (file_name, last_update, speaker_number, context, section)
-                );
+                 );
 
                ALTER TABLE %s.%s OWNER TO %s;
             """ % (output_schema, output_table,
@@ -85,10 +101,10 @@ def getFileNames(output_table, output_schema,
         engine.execute(sql)
 
         sql = """
-        	SELECT DISTINCT file_name, max(last_update) AS last_update
-        	FROM streetevents.calls AS a
-        	WHERE event_type=1
-        	GROUP BY file_name
+            SELECT DISTINCT file_name, max(last_update) AS last_update
+            FROM streetevents.calls AS a
+            WHERE event_type=1
+            GROUP BY file_name
             %s
         """ % (limit_clause)
 
@@ -98,9 +114,8 @@ def getFileNames(output_table, output_schema,
     return files
 
 # Get a list of files to work on.
-files = getFileNames(output_table, output_schema)
+files = getFileNames(output_table, output_schema, num_files=1000)
 print("n_files: %d" % len(files))
-
 
 num_threads = 14
 pool = Pool(num_threads)
@@ -118,7 +133,7 @@ res = pool.map(add_word_counts, files_input)
 
 engine = create_engine(conn_string)
 conn = engine.connect()
-db_comment = "CREATED USING liwc_etc/fog_run.py from " + \
+db_comment = "CREATED USING fls/fls_run.py from " + \
               "GitHub iangow/se_features ON " + \
               time.asctime(time.gmtime()) + ' UTC'
 

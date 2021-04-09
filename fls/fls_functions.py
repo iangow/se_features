@@ -20,9 +20,7 @@ def fls_fog(the_text):
     fl_sents =  [sent for is_fl, sent in zip(fl_vals, sentences) if is_fl]
     nfl_sents = [sent for is_fl, sent in zip(fl_vals, sentences) if not is_fl]
     
-    return {'fl_sents': len(fl_sents),
-            'nfl_sents': len(nfl_sents),
-            **fog_agg(fl_sents, "fl_"),
+    return {**fog_agg(fl_sents, "fl_"),
             **fog_agg(nfl_sents, "nfl_"),
             **tone_agg(fl_sents, "fl_"),
             **tone_agg(nfl_sents, "nfl_")}
