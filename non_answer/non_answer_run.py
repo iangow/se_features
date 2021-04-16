@@ -92,9 +92,6 @@ def getFileNames(output_table, output_schema,
 
     return files
 
-
-
-
 def chunk_list(l, n):
     """Yield n successive chunks from l."""
     size = round(len(l)/n) + 1
