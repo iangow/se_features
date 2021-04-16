@@ -105,7 +105,7 @@ if __name__ == '__main__':
     freeze_support()
     
     # Get a list of files to work on.
-    files = getFileNames(output_table, output_schema, num_files = 1000)
+    files = getFileNames(output_table, output_schema)
     print("n_files: %d" % len(files))
 
     num_threads = 4
