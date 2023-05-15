@@ -3,6 +3,8 @@ cd fog_measure
 ./fog_run.py
 cd ../liwc_etc
 ./liwc_run.py
+cd ../liwc_2015
+./liwc_run.py
 cd ../tone_measure
 ./tone_measure_run.py
 cd ../word_count
